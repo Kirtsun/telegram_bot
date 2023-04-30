@@ -16,6 +16,13 @@ def get_db():
                 'name TEXT NOT NULL,'
                 'buy TEXT NOT NULL,'
                 'sell TEXT NOT NULL)')
+    cur.execute('CREATE TABLE if not exists users('
+                'id INTEGER PRIMARY KEY AUTOINCREMENT,'
+                'pk_in_bot INTEGER NOT NULL,'
+                'user_name TEXT NOT NULL,'
+                'email TEXT NOT NULL)')
+    cur.execute('DELETE FROM currency_usd WHERE id NOT IN (SELECT ID FROM currency_usd ORDER BY ID DESC LIMIT 1)')
+    cur.execute('DELETE FROM currency_usd WHERE id NOT IN (SELECT ID FROM currency_usd ORDER BY ID DESC LIMIT 1)')
     cur.close()
     return connection
 
@@ -46,3 +53,45 @@ def check_currency():
     else:
         data = False
         return data
+
+
+def check_user_in_db(pk):
+    with get_db() as con:
+        cur = con.cursor()
+        check = cur.execute(f'SELECT pk_in_bot FROM users WHERE pk_in_bot = {pk}').fetchone()
+    if check is not None:
+        return True
+    else:
+        return False
+
+
+def create_user(data):
+    with get_db() as con:
+        cur = con.cursor()
+        cur.execute('INSERT INTO users (pk_in_bot, user_name, email) VALUES(?, ?, ?)',
+                    (str(data['pk_in_bot']), data['name'], data['email'],))
+        if cur.rowcount > 0:
+            return True
+        else:
+            return False
+
+
+def dell_base():
+    with get_db() as con:
+        cur = con.cursor()
+        cur.execute('DROP TABLE users')
+
+
+# def insert():
+#     with get_db() as con:
+#         cur = con.cursor()
+#         cur.execute('INSERT INTO users (pk_in_bot, user_name, email) VALUES(?, ?, ?)',
+#                     (465659759, 'Oleg', 'olegkirtsun@mail.com',))
+#         cur.execute('INSERT INTO users (pk_in_bot, user_name, email) VALUES(?, ?, ?)',
+#                     (465659765, 'Oleg', 'olegkirtsun@mail.com',))
+#
+#
+# if __name__ == '__main__':
+# #     # check_user_in_db(465659765)
+# #     # insert()
+    dell_base()
