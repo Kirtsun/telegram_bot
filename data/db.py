@@ -1,4 +1,5 @@
 import sqlite3
+import time
 
 
 class DataBase:
@@ -20,8 +21,10 @@ class DataBase:
             self.cur.execute('CREATE TABLE if not exists users('
                              'id INTEGER PRIMARY KEY AUTOINCREMENT,'
                              'pk_in_bot INTEGER NOT NULL,'
+                             'name TEXT NOT NULL,'
                              'user_name TEXT NOT NULL,'
-                             'email TEXT NOT NULL)')
+                             'email TEXT NOT NULL,'
+                             'time_sub DEFAULT 0)')
 
     def new_currency(self, data):
         with self.conn:
@@ -56,10 +59,18 @@ class DataBase:
         else:
             return False
 
+    def check_sub_status(self, pk):
+        with self.conn:
+            res = self.cur.execute('SELECT time_sub FROM users WHERE pk_in_bot = ?', (pk,)).fetchone()
+        if res[0] > int(time.time()):
+            return True
+        else:
+            return False
+
     def create_user(self, data):
         with self.conn:
-            self.cur.execute('INSERT INTO users (pk_in_bot, user_name, email) VALUES(?, ?, ?)',
-                             (str(data['pk_in_bot']), data['name'], data['email'],))
+            self.cur.execute('INSERT INTO users (pk_in_bot, name, user_name, email) VALUES(?, ?, ?, ?)',
+                             (str(data['pk_in_bot']), data['name'], data['user_name'], data['email'],))
             if self.cur.rowcount > 0:
                 return True
             else:
