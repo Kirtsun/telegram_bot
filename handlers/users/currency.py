@@ -1,10 +1,10 @@
 from aiogram import types
 
 from loader import dp
-from pars import get_currency
+from requests_to_web.requests_currency import get_currency
 
 
-@dp.message_handler(commands=['currency'])
+@dp.message_handler(text=['/currency', 'курс валют', 'А ну ка обнови курс валют!', 'Курс валют'])
 async def currency(massage: types.Message):
     murkup = types.ReplyKeyboardMarkup()
     btn1 = types.KeyboardButton('Очень интересная функция')

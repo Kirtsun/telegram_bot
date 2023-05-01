@@ -1,6 +1,5 @@
 import requests
-
-from db import new_currency, check_currency
+from loader import db
 
 
 def get_currency():
@@ -20,9 +19,8 @@ def get_currency():
                 buy_eur = i['rateBuy']
                 sell_eur = i['rateSell']
                 data['EUR'] = [buy_eur, sell_eur]
-        res = new_currency(data)
+        db.new_currency(data)
         return data
     else:
-        data = check_currency()
+        data = db.check_currency()
         return data
-

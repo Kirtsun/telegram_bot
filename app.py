@@ -1,7 +1,8 @@
 from utils.set_bot_commands import set_commands
 from utils.notyfi import admin
-from users import dp
+from handlers.users import dp
 from aiogram import executor
+from loader import db
 
 
 async def on_start(disp):
@@ -10,4 +11,5 @@ async def on_start(disp):
 
 
 if __name__ == '__main__':
+    db.create_table()
     executor.start_polling(dp, on_startup=on_start)

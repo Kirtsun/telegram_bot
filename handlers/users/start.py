@@ -1,14 +1,12 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-
-from db import check_user_in_db, create_user
-from loader import dp
+from loader import dp, db
 from states.user_form import UserForm
 
 
 @dp.message_handler(text='/start')
 async def start(massage: types.Message):
-    check_user = check_user_in_db(massage.from_user.id)
+    check_user = db.check_user_in_db(massage.from_user.id)
     if check_user is True:
         murkup = types.ReplyKeyboardMarkup()
         btn1 = types.KeyboardButton('Очень интересная функция')
@@ -39,22 +37,14 @@ async def email(massage: types.Message, state: FSMContext):
                 'name': data['name'],
                 'email': data['email']
             }
-            create = create_user(data_to_save)
+            create = db.create_user(data_to_save)
             if create is True:
                 await state.finish()
-                await massage.answer('Регистрация прошла успешно. Пока есть одна команда "/currency"')
-                await start(massage)
+                await massage.answer('Регистрация прошла успешно. Выполни команду "/start", что бы я тебе мог показать'
+                                     ' доступные команды.')
             else:
                 await massage.answer('Что то не так c сохранением, перезапусти базу')
     else:
         await massage.answer('Что-то не так написано, проверь и давай еще раз.')
 
 
-@dp.message_handler(commands='pars')
-async def pars(massage: types.Message):
-    murkup = types.ReplyKeyboardMarkup()
-    btn1 = types.KeyboardButton('Курс валют')
-    murkup.row(btn1)
-    file = open('./photo.jpeg', 'rb')
-    await massage.answer_photo(file, caption='А что ты думал, так быстро все будет? Нифига, я ток учу это все!',
-                               reply_markup=murkup)
