@@ -16,4 +16,4 @@ storage = RedisStorage2(
 cache = redis.Redis()
 
 dp = Dispatcher(bot, storage=storage)
-db = DataBase('database.sql')
+db = DataBase('database.db')

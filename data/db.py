@@ -24,7 +24,7 @@ class DataBase:
                              'name TEXT NOT NULL,'
                              'user_name TEXT NOT NULL,'
                              'email TEXT NOT NULL,'
-                             'time_sub DEFAULT 0)')
+                             'time_sub INTEGER DEFAULT 0)')
 
     def new_currency(self, data):
         with self.conn:
@@ -52,7 +52,6 @@ class DataBase:
 
     def check_user_in_db(self, pk):
         with self.conn:
-
             check = self.cur.execute(f'SELECT pk_in_bot FROM users WHERE pk_in_bot = {pk}').fetchone()
         if check is not None:
             return True
@@ -62,7 +61,26 @@ class DataBase:
     def check_sub_status(self, pk):
         with self.conn:
             res = self.cur.execute('SELECT time_sub FROM users WHERE pk_in_bot = ?', (pk,)).fetchone()
-        if res[0] > int(time.time()):
+        if res:
+            if int(res[0]) > int(time.time()):
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def update_sub(self, user_name, times):
+        with self.conn:
+            self.cur.execute('UPDATE users SET time_sub = ? WHERE user_name = ?', (times, user_name))
+            if self.cur.rowcount > 0:
+                return True
+            else:
+                return False
+
+    def get_user_name(self, user_name):
+        with self.conn:
+            res = self.cur.execute('SELECT pk_in_bot FROM users WHERE user_name = ?', (user_name,)).fetchone()
+        if res is not None:
             return True
         else:
             return False

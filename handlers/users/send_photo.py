@@ -9,8 +9,8 @@ async def pars(massage: types.Message):
         murkup = types.ReplyKeyboardMarkup()
         btn1 = types.KeyboardButton('Курс валют')
         murkup.row(btn1)
-        file = open('data/photo/photo.jpeg', 'rb')
-        await massage.answer_photo(file, caption='А что ты думал, так быстро все будет? Нифига, я ток учу это все!',
+        file = open('data/photo/photo3.jpeg', 'rb')
+        await massage.answer_photo(file, caption='АЗАЗАЗАЗАЗАЗЗАЗАЗАЗАЗААЗЗАЗАЗАЗА 😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂!',
                                    reply_markup=murkup)
     else:
         await massage.answer(f'Подписка не оформлена. Обратись к администратору -> @kyrtsun')
