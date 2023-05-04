@@ -1,0 +1,53 @@
+version: '3.7'
+
+services:
+  bot:
+    container_name: bot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres_password'
+      POSTGRES_DB: 'mydatabase'
+      POSTGRES_HOST: 'db_bot'
+    networks:
+      - bot_db
+    depends_on:
+      - db_bot
+    restart: on-failure
+#    volumes:
+#      - ./app:/app
+    command: python app.py
+
+  db_bot:
+    container_name: db_bot
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'postgres_password'
+      POSTGRES_DB: 'mydatabase'
+    ports:
+      - '5432:5432'
+    networks:
+      - bot_db
+    volumes:
+      - db_bot_vol:/var/lib/postgresql/data
+
+  redis:
+    container_name: redis
+    image: redis
+    restart: on-failure
+    networks:
+      - bot_db
+    ports:
+      - 6379:6379
+    volumes:
+      - redis:/var/lib/redis/data
+
+networks:
+  bot_db:
+
+volumes:
+  redis:
+  db_bot_vol:
