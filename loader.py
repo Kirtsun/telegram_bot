@@ -9,6 +9,7 @@ from data.db import DataBase
 load_dotenv()
 
 bot = Bot(os.getenv('API'), parse_mode=types.ParseMode.HTML)
+"""Для локального запуска нужно указать локал хост"""
 storage = RedisStorage2(
     host='redis',
     port=6379,

@@ -11,21 +11,32 @@ import time
 
 class DataBase:
     def __init__(self):
+        """Для работы через докер"""
         self.conn = psycopg2.connect(
-            dbname='mydatabase',
-            user='postgres',
-            password='postgres_password',
+            dbname='DB_FOR_BOT',
+            user='Kyrtsun',
+            password='Kirtsun123',
             host='db_bot',
             port='5432'
         )
+        """Для локального поднятия"""
+        # self.conn = psycopg2.connect(
+        #         dbname='test2',
+        #         user='kyrtsun',
+        #         password='Kirtsun123',
+        #         host='localhost',
+        #         port='5432'
+        #     )
+
         self.cur = self.conn.cursor()
 
     def create_table(self):
         with self.conn:
             self.cur.execute('CREATE TABLE if not exists currency_usd('
                              'id SERIAL PRIMARY KEY,'
-                             ' name TEXT NOT NULL, buy TEXT NOT NULL,'
-                             ' sell TEXT NOT NULL)')
+                             'name TEXT NOT NULL,'
+                             'buy TEXT NOT NULL,'
+                             'sell TEXT NOT NULL)')
             self.cur.execute('CREATE TABLE if not exists currency_eur('
                              'id SERIAL PRIMARY KEY,'
                              'name TEXT NOT NULL,'
@@ -48,18 +59,18 @@ class DataBase:
             self.cur.execute("INSERT INTO currency_usd (name, buy, sell) VALUES(%s, %s, %s)",
                              ('USD', buy_usd, sell_usd,))
             self.cur.execute("INSERT INTO currency_eur (name, buy, sell) VALUES(%s, %s, %s)",
-                             ('USD', buy_eur, sell_eur,))
+                             ('EUR', buy_eur, sell_eur,))
 
     def check_currency(self):
         data = {}
         with self.conn:
             self.cur.execute("SELECT * FROM currency_usd ORDER BY id DESC LIMIT 1")
-            self.cur.execute("SELECT * FROM currency_eur ORDER BY id DESC LIMIT 1")
             usd = self.cur.fetchone()
+            self.cur.execute("SELECT * FROM currency_eur ORDER BY id DESC LIMIT 1")
             eur = self.cur.fetchone()
         if usd and eur:
-            data['USD'] = [usd[0][2], usd[0][3]]
-            data['EUR'] = [eur[0][2], eur[0][3]]
+            data['USD'] = [usd[2], usd[3]]
+            data['EUR'] = [eur[2], eur[3]]
             return data
         else:
             data = False

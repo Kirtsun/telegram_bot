@@ -7,9 +7,9 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      POSTGRES_USER: 'postgres'
-      POSTGRES_PASSWORD: 'postgres_password'
-      POSTGRES_DB: 'mydatabase'
+      POSTGRES_USER: 'Kyrtsun'
+      POSTGRES_PASSWORD: 'Kirtsun123'
+      POSTGRES_DB: 'DB_FOR_BOT'
       POSTGRES_HOST: 'db_bot'
     networks:
       - bot_db
@@ -24,9 +24,9 @@ services:
     container_name: db_bot
     image: postgres:12-alpine
     environment:
-      POSTGRES_USER: 'postgres'
-      POSTGRES_PASSWORD: 'postgres_password'
-      POSTGRES_DB: 'mydatabase'
+      POSTGRES_USER: 'Kyrtsun'
+      POSTGRES_PASSWORD: 'Kirtsun123'
+      POSTGRES_DB: 'DB_FOR_BOT'
     ports:
       - '5432:5432'
     networks:
